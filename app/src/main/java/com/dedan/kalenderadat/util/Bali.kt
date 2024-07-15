@@ -14,16 +14,13 @@ val wukuNames = listOf(
     "Bala", "Ugu", "Wayang", "Kelawu", "Dukut", "Watugunung"
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
-val referenceDate: LocalDate = LocalDate.of(2023, 12, 19)
+val referenceDate: LocalDate = LocalDate.of(2004, 12, 28)
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun weeksBetween(d1: LocalDate, d2: LocalDate): Int {
     val daysBetween = ChronoUnit.DAYS.between(d1, d2)
     return (daysBetween / 7.0).roundToInt()
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun getWuku(current: LocalDate): String {
     val betweenWeek = weeksBetween(referenceDate, current)
     val resetDate = betweenWeek / 30
