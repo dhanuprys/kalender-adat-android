@@ -22,9 +22,14 @@ fun weeksBetween(d1: LocalDate, d2: LocalDate): Int {
 }
 
 fun getWuku(current: LocalDate): String {
-    val betweenWeek = weeksBetween(referenceDate, current)
-    val resetDate = betweenWeek / 30
-    val preDate = resetDate * 30
-    val wukuIndex = betweenWeek - preDate
-    return wukuNames[wukuIndex]
+    try {
+        val betweenWeek = weeksBetween(referenceDate, current)
+        val resetDate = betweenWeek / 30
+        val preDate = resetDate * 30
+        val wukuIndex = betweenWeek - preDate
+
+        return wukuNames[wukuIndex]
+    } catch (e: Exception) {
+        return ""
+    }
 }

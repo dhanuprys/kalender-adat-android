@@ -36,6 +36,7 @@ import com.dedan.kalenderadat.data.HolidayUiState
 import com.dedan.kalenderadat.data.PurtimUiState
 import com.dedan.kalenderadat.model.DateEvent
 import com.dedan.kalenderadat.model.PurtimDetail
+import com.dedan.kalenderadat.util.DateUtil
 import com.dedan.kalenderadat.util.getWuku
 import com.dedan.kalenderadat.util.safeSlice
 import com.dedan.kalenderadat.util.translateColorString
@@ -101,29 +102,17 @@ fun CalendarLayout(
                     onClicked = onDateSelected,
                     purtim = if (purtimUiState is PurtimUiState.Success)
                         purtimUiState.data.find {
-                            it.date == dates[dateIndex].format(
-                                DateTimeFormatterBuilder().appendPattern(
-                                    "yyyy-MM-dd"
-                                ).toFormatter()
-                            )
+                            it.date == dates[dateIndex].format(DateUtil.normalizeDateFormat())
                         }
                     else null,
                     isHoliday = if (holidayUiState is HolidayUiState.Success)
                         holidayUiState.data.any {
-                            it.date == dates[dateIndex].format(
-                                DateTimeFormatterBuilder().appendPattern(
-                                    "yyyy-MM-dd"
-                                ).toFormatter()
-                            )
+                            it.date == dates[dateIndex].format(DateUtil.normalizeDateFormat())
                         }
                     else false,
                     events = if (dateEventUiState is DateEventUiState.Success)
                         dateEventUiState.data.find {
-                            it.date == dates[dateIndex].format(
-                                DateTimeFormatterBuilder().appendPattern(
-                                    "yyyy-MM-dd"
-                                ).toFormatter()
-                            )
+                            it.date == dates[dateIndex].format(DateUtil.normalizeDateFormat())
                         }
                     else null,
                     modifier = Modifier

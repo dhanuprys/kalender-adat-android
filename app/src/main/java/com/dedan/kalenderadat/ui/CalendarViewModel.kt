@@ -16,6 +16,7 @@ import com.dedan.kalenderadat.data.DefaultAppContainer
 import com.dedan.kalenderadat.data.EventDetailUiState
 import com.dedan.kalenderadat.data.HolidayUiState
 import com.dedan.kalenderadat.data.PurtimUiState
+import com.dedan.kalenderadat.util.DateUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -67,7 +68,7 @@ class CalendarViewModel(
                 it.copy(
                     selectedDate = null,
                     currentDate = currentDate,
-                    dates = calculateSortedDates(currentDate),
+                    dates = DateUtil.calculateSortedDates(currentDate),
                     bottomSheetExpand = false
                 )
             }
@@ -80,7 +81,7 @@ class CalendarViewModel(
 
     fun resetCalendar() {
         _uiState.value = CalendarUiState(
-            dates = calculateSortedDates(LocalDate.now())
+            dates = DateUtil.calculateSortedDates(LocalDate.now())
         )
 
         setCurrentDate(_uiState.value.currentDate)
@@ -149,7 +150,7 @@ class CalendarViewModel(
                 // TODO("CHANGE HERE")
                 val events = calendarRepository.getEvents(
                     date.format(
-                        DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd").toFormatter()
+                        DateUtil.normalizeDateFormat()
                     )
                 )
                 EventDetailUiState.Success(events)
@@ -158,50 +159,6 @@ class CalendarViewModel(
                 EventDetailUiState.Error(e.message ?: "Unknown error")
             }
         }
-    }
-
-    private fun calculateSortedDates(currentDate: LocalDate): List<LocalDate> {
-        val sortedDates: MutableList<LocalDate> = mutableListOf()
-
-        val firstDay = currentDate.withDayOfMonth(1)
-        val totalDay = currentDate.lengthOfMonth()
-        var prevMonthStart: LocalDate? = null
-        val nextMonthStart: LocalDate = firstDay.plusMonths(1)
-
-        var preDay = 0
-        var nextMonthLimit = 0
-
-        if (firstDay.dayOfWeek.value < 7) {
-            preDay = firstDay.dayOfWeek.value
-            prevMonthStart = firstDay.minusDays(preDay.toLong())
-        }
-
-        nextMonthLimit = 42 - (preDay + totalDay)
-
-        if (prevMonthStart != null) {
-            val prevMonthStartDate = prevMonthStart.dayOfMonth
-            val prevMonthEndDate = prevMonthStart.lengthOfMonth()
-
-            for (i in prevMonthStartDate..prevMonthEndDate) {
-                sortedDates.add(
-                    prevMonthStart.withDayOfMonth(i)
-                )
-            }
-        }
-
-        for (i in 1..totalDay) {
-            sortedDates.add(
-                currentDate.withDayOfMonth(i)
-            )
-        }
-
-        for (i in 1..nextMonthLimit) {
-            sortedDates.add(
-                nextMonthStart.withDayOfMonth(i)
-            )
-        }
-
-        return sortedDates
     }
 
     companion object {
