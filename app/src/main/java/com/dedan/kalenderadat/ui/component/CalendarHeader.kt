@@ -11,6 +11,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -24,17 +27,23 @@ fun CalendarHeader(
     onDateChange: (LocalDate) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val monthYearString by remember(currentDate) {
+        derivedStateOf {
+            currentDate.format(
+                DateTimeFormatterBuilder()
+                    .appendPattern("MMMM yyyy")
+                    .toFormatter()
+            )
+        }
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier.padding(16.dp)
     ) {
         Text(
-            text = currentDate.format(
-                DateTimeFormatterBuilder()
-                    .appendPattern("MMMM yyyy")
-                    .toFormatter()
-            ),
+            text = monthYearString,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold
         )
