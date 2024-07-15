@@ -1,5 +1,6 @@
 package com.dedan.kalenderadat.ui
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,6 +14,8 @@ import com.dedan.kalenderadat.data.CalendarUiState
 import com.dedan.kalenderadat.data.DateEventUiState
 import com.dedan.kalenderadat.data.DefaultAppContainer
 import com.dedan.kalenderadat.data.EventDetailUiState
+import com.dedan.kalenderadat.data.HolidayUiState
+import com.dedan.kalenderadat.data.PurtimUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,6 +33,10 @@ class CalendarViewModel(
     var dateEventUiState: DateEventUiState by mutableStateOf(DateEventUiState.Loading)
         private set
     var eventDetailUiState: EventDetailUiState by mutableStateOf(EventDetailUiState.Loading)
+        private set
+    var purtimUiState: PurtimUiState by mutableStateOf(PurtimUiState.Loading)
+        private set
+    var holidayUiState: HolidayUiState by mutableStateOf(HolidayUiState.Loading)
         private set
 
     init {
@@ -66,6 +73,8 @@ class CalendarViewModel(
             }
 
             fetchDates(currentDate)
+            fetchPurtim(currentDate)
+            fetchHolidays(currentDate)
         }
     }
 
@@ -74,7 +83,7 @@ class CalendarViewModel(
             dates = calculateSortedDates(LocalDate.now())
         )
 
-        fetchDates(_uiState.value.currentDate)
+        setCurrentDate(_uiState.value.currentDate)
     }
 
     fun setBottomSheetExpand(expand: Boolean) {
@@ -100,16 +109,52 @@ class CalendarViewModel(
         }
     }
 
+    fun fetchPurtim(currentDate: LocalDate) {
+        viewModelScope.launch {
+            Log.d("ViewModel Purtim", "Start request purtim")
+            purtimUiState = PurtimUiState.Loading
+            purtimUiState = try {
+                val dates = calendarRepository.getPurtim(
+                    month = currentDate.monthValue,
+                    year = currentDate.year
+                )
+                Log.d("ViewModel Purtim", "Success request purtim")
+                PurtimUiState.Success(dates)
+            } catch (e: Exception) {
+                Log.d("ViewModel Purtim", e.message ?: "Error bro")
+                PurtimUiState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    fun fetchHolidays(currentDate: LocalDate) {
+        viewModelScope.launch {
+            holidayUiState = HolidayUiState.Loading
+            holidayUiState = try {
+                val holidays = calendarRepository.getHolidays(
+                    month = currentDate.monthValue,
+                    year = currentDate.year
+                )
+                HolidayUiState.Success(holidays)
+            } catch (e: Exception) {
+                HolidayUiState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
     fun fetchDateDetail(date: LocalDate) {
         viewModelScope.launch {
             eventDetailUiState = EventDetailUiState.Loading
             eventDetailUiState = try {
                 // TODO("CHANGE HERE")
                 val events = calendarRepository.getEvents(
-                    date.format(DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd").toFormatter())
+                    date.format(
+                        DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd").toFormatter()
+                    )
                 )
                 EventDetailUiState.Success(events)
             } catch (e: Exception) {
+                Log.d("ViewModel Date", e.message ?: "Error bro")
                 EventDetailUiState.Error(e.message ?: "Unknown error")
             }
         }

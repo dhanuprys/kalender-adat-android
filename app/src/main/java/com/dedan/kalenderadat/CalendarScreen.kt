@@ -106,12 +106,14 @@ fun CalendarApp(
                         HomeScreen(
                             uiState = uiState,
                             dateEventUiState = viewModel.dateEventUiState,
+                            purtimUiState = viewModel.purtimUiState,
+                            holidayUiState = viewModel.holidayUiState,
                             eventDetailUiState = viewModel.eventDetailUiState,
                             onDateChange = { viewModel.setCurrentDate(it) },
                             onDateSelected = { viewModel.setOpenDetailDate(it) },
                             onExpandClick = { viewModel.setBottomSheetExpand(true) },
                             onCollapseClick = { viewModel.setBottomSheetExpand(false) },
-                            onRefreshClick = { viewModel.fetchDates(uiState.currentDate) },
+                            onRefreshClick = { viewModel.setCurrentDate(uiState.currentDate) },
                             modifier = Modifier.padding(
                                 top = paddingValues.calculateTopPadding(),
                                 bottom = paddingValues.calculateBottomPadding()

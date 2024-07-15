@@ -67,17 +67,15 @@ fun ShowFullDateDetail(
                             verticalArrangement = Arrangement.spacedBy(16.dp),
                             modifier = Modifier.weight(1f)
                         ) {
-                            items(eventDetailUiState.data.size + 1) {
+                            items(eventDetailUiState.data.size) {
                                 if (it == 0) {
                                     NoteCard(
                                         modifier = Modifier.fillMaxWidth()
                                             .padding(vertical = 16.dp)
                                     )
-
-                                    return@items
                                 }
 
-                                val item = eventDetailUiState.data[it - 1]
+                                val item = eventDetailUiState.data[it]
 
                                 EventCardItem(
                                     event = item,
@@ -127,7 +125,8 @@ fun ShowEventBrief(
                     } else {
                         Column {
                             LazyColumn {
-                                items(2) {
+                                val itemShow = minOf(eventDetailUiState.data.size, 2)
+                                items(itemShow) {
                                     val item = eventDetailUiState.data[it]
                                     TextWithBullet(text = item.title)
                                 }

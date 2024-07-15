@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import com.dedan.kalenderadat.data.CalendarUiState
 import com.dedan.kalenderadat.data.DateEventUiState
 import com.dedan.kalenderadat.data.EventDetailUiState
+import com.dedan.kalenderadat.data.HolidayUiState
+import com.dedan.kalenderadat.data.PurtimUiState
 import com.dedan.kalenderadat.ui.component.BottomSheet
 import com.dedan.kalenderadat.ui.component.CalendarHeader
 import com.dedan.kalenderadat.ui.component.CalendarLayout
@@ -29,6 +31,8 @@ import java.time.LocalDate
 fun HomeScreen(
     uiState: CalendarUiState,
     dateEventUiState: DateEventUiState,
+    purtimUiState: PurtimUiState,
+    holidayUiState: HolidayUiState,
     eventDetailUiState: EventDetailUiState,
     onDateChange: (LocalDate) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
@@ -66,6 +70,8 @@ fun HomeScreen(
                 currentDate = uiState.currentDate,
                 dates = uiState.dates,
                 selectedDate = uiState.selectedDate,
+                purtimUiState = purtimUiState,
+                holidayUiState = holidayUiState,
                 dateEventUiState = dateEventUiState,
                 onDateSelected = onDateSelected,
                 onRefreshClick = onRefreshClick

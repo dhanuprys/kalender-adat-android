@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
@@ -28,8 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dedan.kalenderadat.data.DateEventUiState
+import com.dedan.kalenderadat.data.HolidayUiState
+import com.dedan.kalenderadat.data.PurtimUiState
 import com.dedan.kalenderadat.model.DateEvent
+import com.dedan.kalenderadat.model.PurtimDetail
 import com.dedan.kalenderadat.util.getWuku
 import com.dedan.kalenderadat.util.safeSlice
 import com.dedan.kalenderadat.util.translateColorString
@@ -41,6 +47,8 @@ fun CalendarLayout(
     currentDate: LocalDate,
     dates: List<LocalDate>,
     dateEventUiState: DateEventUiState,
+    purtimUiState: PurtimUiState,
+    holidayUiState: HolidayUiState,
     modifier: Modifier = Modifier,
     selectedDate: LocalDate? = null,
     onDateSelected: (LocalDate) -> Unit = {},
@@ -91,6 +99,24 @@ fun CalendarLayout(
                     date = dates[dateIndex],
                     isSelected = selectedDate == dates[dateIndex],
                     onClicked = onDateSelected,
+                    purtim = if (purtimUiState is PurtimUiState.Success)
+                        purtimUiState.data.find {
+                            it.date == dates[dateIndex].format(
+                                DateTimeFormatterBuilder().appendPattern(
+                                    "yyyy-MM-dd"
+                                ).toFormatter()
+                            )
+                        }
+                    else null,
+                    isHoliday = if (holidayUiState is HolidayUiState.Success)
+                        holidayUiState.data.any {
+                            it.date == dates[dateIndex].format(
+                                DateTimeFormatterBuilder().appendPattern(
+                                    "yyyy-MM-dd"
+                                ).toFormatter()
+                            )
+                        }
+                    else false,
                     events = if (dateEventUiState is DateEventUiState.Success)
                         dateEventUiState.data.find {
                             it.date == dates[dateIndex].format(
@@ -177,6 +203,8 @@ fun DateCell(
     currentDate: LocalDate,
     date: LocalDate,
     events: DateEvent?,
+    isHoliday: Boolean,
+    purtim: PurtimDetail?,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     onClicked: (LocalDate) -> Unit = {},
@@ -185,13 +213,43 @@ fun DateCell(
             && date.year == currentDate.year
 
     Box(
-        modifier = modifier.background(
+        modifier = modifier
+            .background(
                 if (isSelected) MaterialTheme.colorScheme.surfaceVariant
                 else MaterialTheme.colorScheme.surface
-            ).clickable {
+            )
+            .clickable {
                 if (inMonth) onClicked(date)
             }
     ) {
+
+        Column(
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(2.dp)
+        ) {
+            if (purtim != null) {
+                Box(
+                    modifier = Modifier
+                        .size(7.dp)
+                        .background(
+                            color = if (purtim.type == "P") Color.Red else Color.Black,
+                            shape = CircleShape
+                        )
+                )
+            }
+
+
+            if (events != null) {
+                Text(
+                    text = "'${events.eventCount}",
+                    fontSize = 7.sp
+                )
+            }
+        }
+
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
@@ -211,9 +269,9 @@ fun DateCell(
             } else {
                 Text(
                     date.dayOfMonth.toString(),
-                    color = if (date.dayOfWeek.value == 7 && inMonth) Color.Red
-                        else if (inMonth) MaterialTheme.colorScheme.onSurface
-                        else MaterialTheme.colorScheme.inverseOnSurface,
+                    color = if ((date.dayOfWeek.value == 7 && inMonth) || isHoliday) Color.Red
+                    else if (inMonth) MaterialTheme.colorScheme.onSurface
+                    else MaterialTheme.colorScheme.inverseOnSurface,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
