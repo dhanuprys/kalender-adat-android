@@ -14,7 +14,7 @@ data class NavigationItem(
 
 val navigationItemList = listOf(
     NavigationItem("Beranda", Icons.Filled.Home) {
-        it.navigate(AppRoutes.Home.name)
+        it.popBackStack(route = AppRoutes.Home.name, inclusive = false)
     },
     NavigationItem("Info", Icons.Filled.Info) {
         it.navigate(AppRoutes.Info.name)
