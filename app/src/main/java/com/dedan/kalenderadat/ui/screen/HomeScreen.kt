@@ -1,5 +1,7 @@
 package com.dedan.kalenderadat.ui.screen
 
+import android.util.Log
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -7,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dedan.kalenderadat.data.CalendarUiState
@@ -28,18 +33,29 @@ fun HomeScreen(
     onDateChange: (LocalDate) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onExpandClick: () -> Unit,
+    onCollapseClick: () -> Unit,
     onRefreshClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(modifier = modifier) {
-        val calendarHeight = (maxHeight.value * 60) / 100
-        val bottomSheetHeight = (if (uiState.bottomSheetExpand) (maxHeight.value * 85) / 100
-        else (maxHeight.value * 35) / 100).dp
+        val calendarHeight by remember {
+            derivedStateOf {
+                ((maxHeight.value * 60) / 100).dp
+            }
+        }
+        val bottomSheetHeight by remember(uiState.bottomSheetExpand) {
+            derivedStateOf {
+                if (uiState.bottomSheetExpand)
+                        ((maxHeight.value * 75) / 100).dp
+                else
+                        (maxHeight.value * 0.35f).dp
+            }
+        }
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(calendarHeight.dp)
+                .height(calendarHeight)
         ) {
             CalendarHeader(
                 currentDate = uiState.currentDate,
@@ -61,7 +77,10 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             BottomSheet(
+                collapsable = uiState.bottomSheetExpand,
+                onCollapseRequest = onCollapseClick,
                 modifier = Modifier
+                    .animateContentSize()
                     .height(bottomSheetHeight)
             ) {
                 when {

@@ -63,6 +63,7 @@ fun CalendarApp(
                         onDateChange = { viewModel.setCurrentDate(it) },
                         onDateSelected = { viewModel.setOpenDetailDate(it) },
                         onExpandClick = { viewModel.setBottomSheetExpand(true) },
+                        onCollapseClick = { viewModel.setBottomSheetExpand(false) },
                         onRefreshClick = { viewModel.fetchDates(uiState.currentDate) },
                         modifier = Modifier.padding(
                             top = paddingValues.calculateTopPadding(),
