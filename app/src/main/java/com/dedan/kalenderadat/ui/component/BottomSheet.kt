@@ -54,7 +54,7 @@ fun BottomSheet(
             containerColor = MaterialTheme.colorScheme.inverseOnSurface
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 5.dp,
+            defaultElevation = 8.dp,
         ),
         shape = RoundedCornerShape(
             topStart = 40.dp,

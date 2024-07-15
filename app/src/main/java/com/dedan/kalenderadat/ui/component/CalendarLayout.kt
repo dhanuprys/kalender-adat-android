@@ -117,15 +117,15 @@ fun LoadStatusCell(
     modifier: Modifier = Modifier
 ) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
 //        horizontalArrangement = Arrangement.Center,
-        modifier = modifier
     ) {
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
-                    .width(20.dp)
-                    .offset(0.dp, 8.dp),
+                    .size(20.dp)
+                    .offset(x = 10.dp),
                 color = MaterialTheme.colorScheme.secondary,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
@@ -150,7 +150,8 @@ fun WukuCell(
         modifier = modifier
     ) {
         Text(
-            getWuku(date).safeSlice(0..3)
+            getWuku(date).safeSlice(0..3),
+            style = MaterialTheme.typography.bodySmall
         )
     }
 }

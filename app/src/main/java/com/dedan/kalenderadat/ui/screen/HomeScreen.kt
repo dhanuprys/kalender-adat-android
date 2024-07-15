@@ -40,13 +40,13 @@ fun HomeScreen(
     BoxWithConstraints(modifier = modifier) {
         val calendarHeight by remember {
             derivedStateOf {
-                ((maxHeight.value * 60) / 100).dp
+                (maxHeight.value * 0.6f).dp
             }
         }
         val bottomSheetHeight by remember(uiState.bottomSheetExpand) {
             derivedStateOf {
                 if (uiState.bottomSheetExpand)
-                        ((maxHeight.value * 75) / 100).dp
+                        (maxHeight.value * 0.80f).dp
                 else
                         (maxHeight.value * 0.35f).dp
             }
