@@ -176,9 +176,9 @@ fun DateCell(
     currentDate: LocalDate,
     date: LocalDate,
     events: DateEvent?,
+    modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     onClicked: (LocalDate) -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     val inMonth = date.monthValue == currentDate.monthValue
             && date.year == currentDate.year
@@ -187,7 +187,9 @@ fun DateCell(
         modifier = modifier.background(
                 if (isSelected) MaterialTheme.colorScheme.surfaceVariant
                 else MaterialTheme.colorScheme.surface
-            ).clickable { onClicked(date) }
+            ).clickable {
+                if (inMonth) onClicked(date)
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
