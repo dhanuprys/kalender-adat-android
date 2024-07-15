@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "KalenderBali"
+rootProject.name = "Kalender Adat"
 include(":app")
  

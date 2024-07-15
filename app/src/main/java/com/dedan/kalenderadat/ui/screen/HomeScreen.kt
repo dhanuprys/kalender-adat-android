@@ -1,0 +1,83 @@
+package com.dedan.kalenderadat.ui.screen
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.dedan.kalenderadat.data.CalendarUiState
+import com.dedan.kalenderadat.data.DateEventUiState
+import com.dedan.kalenderadat.data.EventDetailUiState
+import com.dedan.kalenderadat.ui.component.BottomSheet
+import com.dedan.kalenderadat.ui.component.CalendarHeader
+import com.dedan.kalenderadat.ui.component.CalendarLayout
+import com.dedan.kalenderadat.ui.component.ClickOnDateGuide
+import com.dedan.kalenderadat.ui.component.ShowEventBrief
+import com.dedan.kalenderadat.ui.component.ShowFullDateDetail
+import java.time.LocalDate
+
+@Composable
+fun HomeScreen(
+    uiState: CalendarUiState,
+    dateEventUiState: DateEventUiState,
+    eventDetailUiState: EventDetailUiState,
+    onDateChange: (LocalDate) -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
+    onExpandClick: () -> Unit,
+    onRefreshClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    BoxWithConstraints(modifier = modifier) {
+        val calendarHeight = (maxHeight.value * 60) / 100
+        val bottomSheetHeight = (if (uiState.bottomSheetExpand) (maxHeight.value * 90) / 100
+        else (maxHeight.value * 35) / 100).dp
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(calendarHeight.dp)
+        ) {
+            CalendarHeader(
+                currentDate = uiState.currentDate,
+                onDateChange = onDateChange,
+                modifier = Modifier.fillMaxWidth()
+            )
+            CalendarLayout(
+                currentDate = uiState.currentDate,
+                dates = uiState.dates,
+                selectedDate = uiState.selectedDate,
+                dateEventUiState = dateEventUiState,
+                onDateSelected = onDateSelected,
+                onRefreshClick = onRefreshClick
+            )
+        }
+
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            BottomSheet(
+                modifier = Modifier
+                    .height(bottomSheetHeight)
+            ) {
+                when {
+                    uiState.selectedDate == null -> ClickOnDateGuide()
+                    !uiState.bottomSheetExpand -> ShowEventBrief(
+                        selectedDate = uiState.selectedDate,
+                        eventDetailUiState = eventDetailUiState,
+                        onExpandClick = onExpandClick
+                    )
+                    uiState.bottomSheetExpand -> ShowFullDateDetail(
+                        selectedDate = uiState.selectedDate,
+                        eventDetailUiState = eventDetailUiState
+                    )
+                }
+            }
+        }
+
+    }
+}

@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.dedan.kalenderbali"
+    namespace = "com.dedan.kalenderadat"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.dedan.kalenderbali"
+        applicationId = "com.dedan.kalenderadat"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
