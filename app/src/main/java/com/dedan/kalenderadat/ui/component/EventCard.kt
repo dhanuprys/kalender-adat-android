@@ -37,9 +37,10 @@ fun ShowFullDateDetail(
     eventDetailUiState: EventDetailUiState,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier
-        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-        .fillMaxSize()
+    Column(
+        modifier = modifier
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            .fillMaxSize()
     ) {
         EventDetailHeader(date = selectedDate)
         Spacer(modifier = Modifier.height(16.dp))
@@ -48,6 +49,7 @@ fun ShowFullDateDetail(
             when (eventDetailUiState) {
                 is EventDetailUiState.Loading ->
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+
                 is EventDetailUiState.Success -> {
                     if (eventDetailUiState.data.isEmpty()) {
                         Text("No Event")
@@ -79,7 +81,8 @@ fun ShowFullDateDetail(
                                                 model = "https://adat.suryamahendra.com/storage/" + item.imageUrl,
                                                 contentDescription = null,
                                                 contentScale = ContentScale.Crop,
-                                                modifier = Modifier.fillMaxWidth()
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
                                                     .height(150.dp)
                                                     .clip(RoundedCornerShape(8.dp))
                                             )
@@ -126,9 +129,10 @@ fun ShowEventBrief(
     onExpandClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier
-        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-        .fillMaxSize()
+    Column(
+        modifier = modifier
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            .fillMaxSize()
     ) {
         EventDetailHeader(date = selectedDate)
         Spacer(modifier = Modifier.height(16.dp))
@@ -140,6 +144,7 @@ fun ShowEventBrief(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
+
                 is EventDetailUiState.Success -> {
                     if (eventDetailUiState.data.isEmpty()) {
                         Text("No Event")
@@ -157,6 +162,7 @@ fun ShowEventBrief(
                         }
                     }
                 }
+
                 is EventDetailUiState.Error -> {
                     Text("Error")
                 }
@@ -191,12 +197,16 @@ fun EventDetailHeader(
     date: LocalDate,
     modifier: Modifier = Modifier
 ) {
+    val baliDayList: List<String> =
+        listOf("Soma", "Anggara", "Buda", "Wraspati", "Sukra", "Saniscara", "Redite")
+    val balineseDate = baliDayList[date.dayOfWeek.value - 1] + date.format(
+        DateTimeFormatterBuilder()
+            .appendPattern(", dd MMMM yyyy")
+            .toFormatter()
+    )
+
     Text(
-        text = date.format(
-            DateTimeFormatterBuilder()
-                .appendPattern("cccc, dd MMMM yyyy")
-                .toFormatter()
-        ),
+        text = balineseDate,
         style = MaterialTheme.typography.titleMedium,
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.SemiBold,

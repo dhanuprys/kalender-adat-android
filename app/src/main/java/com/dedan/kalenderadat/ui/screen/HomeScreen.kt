@@ -33,7 +33,7 @@ fun HomeScreen(
 ) {
     BoxWithConstraints(modifier = modifier) {
         val calendarHeight = (maxHeight.value * 60) / 100
-        val bottomSheetHeight = (if (uiState.bottomSheetExpand) (maxHeight.value * 90) / 100
+        val bottomSheetHeight = (if (uiState.bottomSheetExpand) (maxHeight.value * 85) / 100
         else (maxHeight.value * 35) / 100).dp
 
         Column(
