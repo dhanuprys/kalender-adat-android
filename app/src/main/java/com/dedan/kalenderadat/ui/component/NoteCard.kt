@@ -23,15 +23,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.dedan.kalenderadat.data.NoteItemUiState
 
 @Composable
-fun NoteCard(modifier: Modifier = Modifier) {
-    NoteCreateButton(modifier = modifier)
+fun NoteCard(
+    noteState: NoteItemUiState,
+    modifier: Modifier = Modifier
+) {
+    if (noteState.available) {
+        NoteContent(
+            content = noteState.note!!.content,
+            modifier = modifier
+        )
+    } else {
+        NoteCreateButton(modifier = modifier)
+    }
+//    NoteCreateButton(modifier = modifier)
 //    NoteContent(modifier = modifier)
 }
 
 @Composable
-fun NoteContent(modifier: Modifier = Modifier) {
+fun NoteContent(
+    content: String,
+    modifier: Modifier = Modifier
+) {
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
@@ -56,7 +71,7 @@ fun NoteContent(modifier: Modifier = Modifier) {
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Hari ini adalah hari dimana cinta kita bertemu dengan sesama blabla")
+            Text(text = content)
         }
     }
 }

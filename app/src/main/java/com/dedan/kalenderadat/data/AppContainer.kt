@@ -1,5 +1,6 @@
 package com.dedan.kalenderadat.data
 
+import android.content.Context
 import com.dedan.kalenderadat.network.CalendarApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -8,9 +9,10 @@ import retrofit2.Retrofit
 
 interface AppContainer {
     val calendarRepository: CalendarRepository
+    val noteRepository: NoteRepository
 }
 
-class DefaultAppContainer : AppContainer {
+class DefaultAppContainer(private val context: Context) : AppContainer {
     private val baseUrl = "https://adat.suryamahendra.com/"
 
     private val retrofit: Retrofit by lazy {
@@ -26,5 +28,11 @@ class DefaultAppContainer : AppContainer {
 
     override val calendarRepository: CalendarRepository by lazy {
         NetworkCalendarRepository(retrofitService)
+    }
+
+    override val noteRepository: NoteRepository by lazy {
+        LocalNoteRepository(
+            NoteDatabase.getDatabase(context).noteDao()
+        )
     }
 }

@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.dedan.kalenderadat.data.EventDetailUiState
+import com.dedan.kalenderadat.data.NoteItemUiState
 import com.dedan.kalenderadat.model.EventDetail
 import com.dedan.kalenderadat.util.translateColorString
 import java.time.LocalDate
@@ -42,6 +43,7 @@ import java.time.format.DateTimeFormatterBuilder
 fun ShowFullDateDetail(
     selectedDate: LocalDate,
     eventDetailUiState: EventDetailUiState,
+    noteState: NoteItemUiState,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -59,6 +61,7 @@ fun ShowFullDateDetail(
                 is EventDetailUiState.Success -> {
                     if (eventDetailUiState.data.isEmpty()) {
                         NoteCard(
+                            noteState = noteState,
                             modifier = Modifier.fillMaxWidth()
                                 .padding(vertical = 16.dp)
                         )
@@ -70,6 +73,7 @@ fun ShowFullDateDetail(
                             items(eventDetailUiState.data.size) {
                                 if (it == 0) {
                                     NoteCard(
+                                        noteState = noteState,
                                         modifier = Modifier.fillMaxWidth()
                                             .padding(vertical = 16.dp)
                                     )

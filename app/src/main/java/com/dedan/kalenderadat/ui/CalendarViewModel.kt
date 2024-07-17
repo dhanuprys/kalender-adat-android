@@ -9,24 +9,33 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.dedan.kalenderadat.CalendarApplication
 import com.dedan.kalenderadat.data.CalendarRepository
 import com.dedan.kalenderadat.data.CalendarUiState
 import com.dedan.kalenderadat.data.DateEventUiState
 import com.dedan.kalenderadat.data.DefaultAppContainer
 import com.dedan.kalenderadat.data.EventDetailUiState
 import com.dedan.kalenderadat.data.HolidayUiState
+import com.dedan.kalenderadat.data.NoteItem
+import com.dedan.kalenderadat.data.NoteItemUiState
+import com.dedan.kalenderadat.data.NoteRepository
 import com.dedan.kalenderadat.data.PurtimUiState
 import com.dedan.kalenderadat.util.DateUtil
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatterBuilder
 
 class CalendarViewModel(
-    private val calendarRepository: CalendarRepository
+    private val calendarRepository: CalendarRepository,
+    private val noteRepository: NoteRepository
 ) : ViewModel() {
     private val _uiState: MutableStateFlow<CalendarUiState> = MutableStateFlow(CalendarUiState())
     val uiState: StateFlow<CalendarUiState> = _uiState.asStateFlow()
@@ -38,6 +47,8 @@ class CalendarViewModel(
     var purtimUiState: PurtimUiState by mutableStateOf(PurtimUiState.Loading)
         private set
     var holidayUiState: HolidayUiState by mutableStateOf(HolidayUiState.Loading)
+        private set
+    var noteState: NoteItemUiState by mutableStateOf(NoteItemUiState())
         private set
 
     init {
@@ -57,6 +68,7 @@ class CalendarViewModel(
                 }
 
                 fetchDateDetail(date)
+                fetchNote(date)
             }
         }
     }
@@ -106,6 +118,21 @@ class CalendarViewModel(
                 DateEventUiState.Success(dates)
             } catch (e: Exception) {
                 DateEventUiState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    fun fetchNote(currentDate: LocalDate) {
+        viewModelScope.launch {
+            noteRepository.getNoteByDate(
+                currentDate.format(
+                    DateUtil.normalizeDateFormat()
+                )
+            ).collect {
+                noteState = NoteItemUiState(
+                    available = it != null,
+                    note = it
+                )
             }
         }
     }
@@ -164,8 +191,12 @@ class CalendarViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val container = DefaultAppContainer()
-                CalendarViewModel(container.calendarRepository)
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as CalendarApplication)
+
+                CalendarViewModel(
+                    calendarRepository = application.container.calendarRepository,
+                    noteRepository = application.container.noteRepository
+                )
             }
         }
     }

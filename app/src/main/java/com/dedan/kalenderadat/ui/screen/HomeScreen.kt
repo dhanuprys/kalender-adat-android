@@ -1,6 +1,5 @@
 package com.dedan.kalenderadat.ui.screen
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -18,6 +17,7 @@ import com.dedan.kalenderadat.data.CalendarUiState
 import com.dedan.kalenderadat.data.DateEventUiState
 import com.dedan.kalenderadat.data.EventDetailUiState
 import com.dedan.kalenderadat.data.HolidayUiState
+import com.dedan.kalenderadat.data.NoteItemUiState
 import com.dedan.kalenderadat.data.PurtimUiState
 import com.dedan.kalenderadat.ui.component.BottomSheet
 import com.dedan.kalenderadat.ui.component.CalendarHeader
@@ -34,6 +34,7 @@ fun HomeScreen(
     purtimUiState: PurtimUiState,
     holidayUiState: HolidayUiState,
     eventDetailUiState: EventDetailUiState,
+    noteState: NoteItemUiState,
     onDateChange: (LocalDate) -> Unit,
     onDateSelected: (LocalDate) -> Unit,
     onExpandClick: () -> Unit,
@@ -98,6 +99,7 @@ fun HomeScreen(
                     )
                     uiState.bottomSheetExpand -> ShowFullDateDetail(
                         selectedDate = uiState.selectedDate,
+                        noteState = noteState,
                         eventDetailUiState = eventDetailUiState
                     )
                 }

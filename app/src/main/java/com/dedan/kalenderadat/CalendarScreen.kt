@@ -21,7 +21,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -96,7 +95,7 @@ fun CalendarApp(
                 modifier = Modifier.fillMaxSize()
             ) { paddingValues ->
                 paddingValues
-                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
                 NavHost(
                     navController = navController,
@@ -104,16 +103,17 @@ fun CalendarApp(
                 ) {
                     composable(AppRoutes.Home.name) {
                         HomeScreen(
-                            uiState = uiState,
+                            uiState = uiState.value,
                             dateEventUiState = viewModel.dateEventUiState,
                             purtimUiState = viewModel.purtimUiState,
                             holidayUiState = viewModel.holidayUiState,
                             eventDetailUiState = viewModel.eventDetailUiState,
+                            noteState = viewModel.noteState,
                             onDateChange = { viewModel.setCurrentDate(it) },
                             onDateSelected = { viewModel.setOpenDetailDate(it) },
                             onExpandClick = { viewModel.setBottomSheetExpand(true) },
                             onCollapseClick = { viewModel.setBottomSheetExpand(false) },
-                            onRefreshClick = { viewModel.setCurrentDate(uiState.currentDate) },
+                            onRefreshClick = { viewModel.setCurrentDate(uiState.value.currentDate) },
                             modifier = Modifier.padding(
                                 top = paddingValues.calculateTopPadding(),
                                 bottom = paddingValues.calculateBottomPadding()
