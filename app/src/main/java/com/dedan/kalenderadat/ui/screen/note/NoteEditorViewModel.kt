@@ -8,12 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dedan.kalenderadat.data.NoteItem
 import com.dedan.kalenderadat.data.NoteRepository
+import com.dedan.kalenderadat.util.DateUtil
 import com.dedan.kalenderadat.util.safeSlice
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.format.DateTimeFormatterBuilder
 
 class NoteEditorViewModel(
     savedStateHandle: SavedStateHandle,
@@ -21,11 +23,18 @@ class NoteEditorViewModel(
 ) : ViewModel() {
     private val date: String = checkNotNull(savedStateHandle[NoteEditorDestination.dateArg])
 
+    var dateString: String
+        private set
+
     var uiState: NoteEditorUiState by mutableStateOf(NoteEditorUiState())
         private set
 
     init {
         getNote()
+
+        dateString = DateUtil.parseNormalizedDate(date).format(
+            DateTimeFormatterBuilder().appendPattern("dd MMMM yyyy").toFormatter()
+        )
     }
 
     suspend fun saveNote() {

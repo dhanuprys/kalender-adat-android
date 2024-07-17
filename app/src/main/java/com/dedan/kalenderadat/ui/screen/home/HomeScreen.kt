@@ -108,7 +108,7 @@ fun HomeScreen(
                         collapsable = uiState.bottomSheetExpand,
                         onCollapseRequest = { viewModel.setBottomSheetExpand(false) },
                         modifier = Modifier
-                            .animateContentSize()
+//                            .animateContentSize()
                             .height(bottomSheetHeight)
                     ) {
                         when {

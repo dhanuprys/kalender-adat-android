@@ -1,5 +1,6 @@
 package com.dedan.kalenderadat.ui.navigation
 
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -33,7 +34,8 @@ fun CalendarNavHost(
             route = NoteEditorDestination.routeWithArgs,
             arguments = listOf(navArgument(NoteEditorDestination.dateArg) {
                 type = NavType.StringType
-            })
+            }),
+            exitTransition = { ExitTransition.None }
         ) {
             NoteEditorScreen(
                 navigateBack = { navController.popBackStack() },

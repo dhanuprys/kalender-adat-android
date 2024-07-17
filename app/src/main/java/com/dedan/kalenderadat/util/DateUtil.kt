@@ -4,54 +4,58 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 
-class DateUtil {
-    companion object {
-        fun normalizeDateFormat(): DateTimeFormatter =
-            DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd").toFormatter()
-        
-        
-        fun calculateSortedDates(currentDate: LocalDate): List<LocalDate> {
-            val sortedDates: MutableList<LocalDate> = mutableListOf()
+object DateUtil {
+    fun normalizeDateFormat(): DateTimeFormatter =
+        DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd").toFormatter()
 
-            val firstDay = currentDate.withDayOfMonth(1)
-            val totalDay = currentDate.lengthOfMonth()
-            var prevMonthStart: LocalDate? = null
-            val nextMonthStart: LocalDate = firstDay.plusMonths(1)
+    fun parseNormalizedDate(date: String): LocalDate =
+        LocalDate.parse(
+            date,
+            normalizeDateFormat()
+        )
 
-            var preDay = 0
-            var nextMonthLimit = 0
 
-            if (firstDay.dayOfWeek.value < 7) {
-                preDay = firstDay.dayOfWeek.value
-                prevMonthStart = firstDay.minusDays(preDay.toLong())
-            }
+    fun calculateSortedDates(currentDate: LocalDate): List<LocalDate> {
+        val sortedDates: MutableList<LocalDate> = mutableListOf()
 
-            nextMonthLimit = 42 - (preDay + totalDay)
+        val firstDay = currentDate.withDayOfMonth(1)
+        val totalDay = currentDate.lengthOfMonth()
+        var prevMonthStart: LocalDate? = null
+        val nextMonthStart: LocalDate = firstDay.plusMonths(1)
 
-            if (prevMonthStart != null) {
-                val prevMonthStartDate = prevMonthStart.dayOfMonth
-                val prevMonthEndDate = prevMonthStart.lengthOfMonth()
+        var preDay = 0
+        var nextMonthLimit = 0
 
-                for (i in prevMonthStartDate..prevMonthEndDate) {
-                    sortedDates.add(
-                        prevMonthStart.withDayOfMonth(i)
-                    )
-                }
-            }
-
-            for (i in 1..totalDay) {
-                sortedDates.add(
-                    currentDate.withDayOfMonth(i)
-                )
-            }
-
-            for (i in 1..nextMonthLimit) {
-                sortedDates.add(
-                    nextMonthStart.withDayOfMonth(i)
-                )
-            }
-
-            return sortedDates
+        if (firstDay.dayOfWeek.value < 7) {
+            preDay = firstDay.dayOfWeek.value
+            prevMonthStart = firstDay.minusDays(preDay.toLong())
         }
+
+        nextMonthLimit = 42 - (preDay + totalDay)
+
+        if (prevMonthStart != null) {
+            val prevMonthStartDate = prevMonthStart.dayOfMonth
+            val prevMonthEndDate = prevMonthStart.lengthOfMonth()
+
+            for (i in prevMonthStartDate..prevMonthEndDate) {
+                sortedDates.add(
+                    prevMonthStart.withDayOfMonth(i)
+                )
+            }
+        }
+
+        for (i in 1..totalDay) {
+            sortedDates.add(
+                currentDate.withDayOfMonth(i)
+            )
+        }
+
+        for (i in 1..nextMonthLimit) {
+            sortedDates.add(
+                nextMonthStart.withDayOfMonth(i)
+            )
+        }
+
+        return sortedDates
     }
 }
