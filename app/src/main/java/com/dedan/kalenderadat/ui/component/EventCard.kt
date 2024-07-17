@@ -43,6 +43,7 @@ import java.time.format.DateTimeFormatterBuilder
 fun ShowFullDateDetail(
     selectedDate: LocalDate,
     eventDetailUiState: EventDetailUiState,
+    navigateToNoteEditor: (date: String) -> Unit,
     noteState: NoteItemUiState,
     modifier: Modifier = Modifier
 ) {
@@ -61,7 +62,9 @@ fun ShowFullDateDetail(
                 is EventDetailUiState.Success -> {
                     if (eventDetailUiState.data.isEmpty()) {
                         NoteCard(
+                            navigateToNoteEditor = navigateToNoteEditor,
                             noteState = noteState,
+                            date = selectedDate,
                             modifier = Modifier.fillMaxWidth()
                                 .padding(vertical = 16.dp)
                         )
@@ -73,7 +76,9 @@ fun ShowFullDateDetail(
                             items(eventDetailUiState.data.size) {
                                 if (it == 0) {
                                     NoteCard(
+                                        navigateToNoteEditor = navigateToNoteEditor,
                                         noteState = noteState,
+                                        date = selectedDate,
                                         modifier = Modifier.fillMaxWidth()
                                             .padding(vertical = 16.dp)
                                     )
@@ -91,7 +96,6 @@ fun ShowFullDateDetail(
                         }
                     }
                 }
-
                 is EventDetailUiState.Error -> {
                     Text("Error")
                 }

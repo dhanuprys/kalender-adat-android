@@ -1,5 +1,6 @@
 package com.dedan.kalenderadat.ui.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,19 +25,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dedan.kalenderadat.data.NoteItemUiState
+import com.dedan.kalenderadat.util.DateUtil
+import java.time.LocalDate
 
 @Composable
 fun NoteCard(
     noteState: NoteItemUiState,
+    navigateToNoteEditor: (date: String) -> Unit,
+    date: LocalDate,
     modifier: Modifier = Modifier
 ) {
     if (noteState.available) {
         NoteContent(
             content = noteState.note!!.content,
+            onEditClick = {
+                navigateToNoteEditor(
+                    date.format(DateUtil.normalizeDateFormat())
+                )
+            },
             modifier = modifier
         )
     } else {
-        NoteCreateButton(modifier = modifier)
+        NoteCreateButton(
+            onClick = {
+                navigateToNoteEditor(
+                    date.format(DateUtil.normalizeDateFormat())
+                )
+            },
+            modifier = modifier
+        )
     }
 //    NoteCreateButton(modifier = modifier)
 //    NoteContent(modifier = modifier)
@@ -45,6 +62,7 @@ fun NoteCard(
 @Composable
 fun NoteContent(
     content: String,
+    onEditClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -64,7 +82,7 @@ fun NoteContent(
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold
                 )
-                Button(onClick = { /*TODO*/ }) {
+                Button(onClick = onEditClick) {
                     Icon(imageVector = Icons.Filled.Edit, contentDescription = null)
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(text = "Edit")
@@ -77,7 +95,10 @@ fun NoteContent(
 }
 
 @Composable
-fun NoteCreateButton(modifier: Modifier = Modifier) {
+fun NoteCreateButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
@@ -85,7 +106,7 @@ fun NoteCreateButton(modifier: Modifier = Modifier) {
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
         ),
-        modifier = modifier
+        modifier = modifier.clickable { onClick() }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
