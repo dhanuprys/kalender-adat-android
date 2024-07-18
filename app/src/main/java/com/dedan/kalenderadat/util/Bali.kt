@@ -21,6 +21,13 @@ fun weeksBetween(d1: LocalDate, d2: LocalDate): Int {
     return (daysBetween / 7.0).roundToInt()
 }
 
+fun translateDayIndexToBalineseDay(dayIndex: Int): String {
+    val baliDayList: List<String> =
+        listOf("Soma", "Anggara", "Buda", "Wraspati", "Sukra", "Saniscara", "Redite")
+
+    return baliDayList[dayIndex - 1]
+}
+
 fun getWuku(current: LocalDate): String {
     try {
         val betweenWeek = weeksBetween(referenceDate, current)

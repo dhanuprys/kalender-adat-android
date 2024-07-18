@@ -35,6 +35,7 @@ import com.dedan.kalenderadat.data.EventDetailUiState
 import com.dedan.kalenderadat.data.NoteItemUiState
 import com.dedan.kalenderadat.model.EventDetail
 import com.dedan.kalenderadat.util.translateColorString
+import com.dedan.kalenderadat.util.translateDayIndexToBalineseDay
 import java.time.LocalDate
 import java.time.format.DateTimeFormatterBuilder
 
@@ -182,11 +183,7 @@ fun EventDetailHeader(
 ) {
     val balineseDate by remember(date) {
         derivedStateOf {
-            Log.d("DateHeader", "Recompose")
-            val baliDayList: List<String> =
-                listOf("Soma", "Anggara", "Buda", "Wraspati", "Sukra", "Saniscara", "Redite")
-
-            baliDayList[date.dayOfWeek.value - 1] + date.format(
+            translateDayIndexToBalineseDay(date.dayOfWeek.value) + date.format(
                 DateTimeFormatterBuilder()
                     .appendPattern(", dd MMMM yyyy")
                     .toFormatter()

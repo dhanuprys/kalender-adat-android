@@ -10,6 +10,7 @@ import com.dedan.kalenderadat.data.NoteItem
 import com.dedan.kalenderadat.data.NoteRepository
 import com.dedan.kalenderadat.util.DateUtil
 import com.dedan.kalenderadat.util.safeSlice
+import com.dedan.kalenderadat.util.translateDayIndexToBalineseDay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -30,11 +31,13 @@ class NoteEditorViewModel(
         private set
 
     init {
-        getNote()
+        DateUtil.parseNormalizedDate(date).let {
+            dateString = translateDayIndexToBalineseDay(it.dayOfWeek.value) + it.format(
+                DateTimeFormatterBuilder().appendPattern(", dd MMMM yyyy").toFormatter()
+            )
+        }
 
-        dateString = DateUtil.parseNormalizedDate(date).format(
-            DateTimeFormatterBuilder().appendPattern("dd MMMM yyyy").toFormatter()
-        )
+        getNote()
     }
 
     suspend fun saveNote() {
