@@ -7,7 +7,12 @@ fun <T> List<T>.safeSlice(range: IntRange): List<T> {
 }
 
 fun String.safeSlice(range: IntRange): String {
-    val safeStart = range.first.coerceIn(0, length)
-    val safeEnd = range.last.coerceIn(0, length - 1)
-    return substring(safeStart, safeEnd + 1)
+    try {
+        val safeStart = range.first.coerceIn(0, length)
+        val safeEnd = range.last.coerceIn(0, length - 1)
+
+        return substring(safeStart, safeEnd + 1)
+    } catch (e: Exception) {
+        return ""
+    }
 }

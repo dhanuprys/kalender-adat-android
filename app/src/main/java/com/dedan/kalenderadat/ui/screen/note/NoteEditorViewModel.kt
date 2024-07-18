@@ -38,8 +38,15 @@ class NoteEditorViewModel(
     }
 
     suspend fun saveNote() {
+        val noteContent = validateNoteContent(uiState.note!!)
+
+        if (noteContent.isBlank()) {
+            noteRepository.deleteNote(uiState.note!!)
+            return
+        }
+
         noteRepository.writeNote(uiState.note!!.copy(
-            content = validateNoteContent(uiState.note!!)
+            content = noteContent
         ))
     }
 
