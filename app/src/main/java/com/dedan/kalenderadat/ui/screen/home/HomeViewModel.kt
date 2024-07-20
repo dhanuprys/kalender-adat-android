@@ -78,6 +78,7 @@ class HomeViewModel(
     fun setCurrentDate(currentDate: LocalDate) {
         viewModelScope.launch {
             eventDetailUiState = EventDetailUiState.Loading
+
             _uiState.update {
                 it.copy(
                     selectedDate = null,
@@ -109,9 +110,12 @@ class HomeViewModel(
         }
     }
 
-    fun fetchDates(currentDate: LocalDate) {
+    fun fetchDates(currentDate: LocalDate, refresh: Boolean = false) {
         viewModelScope.launch {
-            dateEventUiState = DateEventUiState.Loading
+            if (!refresh) {
+                dateEventUiState = DateEventUiState.Loading
+            }
+
             dateEventUiState = try {
                 val dates = calendarRepository.getDates(
                     month = currentDate.monthValue,
