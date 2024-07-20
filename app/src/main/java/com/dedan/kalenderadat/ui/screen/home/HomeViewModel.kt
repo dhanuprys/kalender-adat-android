@@ -15,9 +15,14 @@ import com.dedan.kalenderadat.data.NoteItemUiState
 import com.dedan.kalenderadat.data.NoteRepository
 import com.dedan.kalenderadat.data.PurtimUiState
 import com.dedan.kalenderadat.util.DateUtil
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -37,8 +42,16 @@ class HomeViewModel(
         private set
     var holidayUiState: HolidayUiState by mutableStateOf(HolidayUiState.Loading)
         private set
-    var noteState: NoteItemUiState by mutableStateOf(NoteItemUiState())
-        private set
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val noteState = uiState.flatMapLatest {
+        noteRepository.getNoteByDate(
+            uiState.value.selectedDate?.format(DateUtil.normalizeDateFormat())
+                ?: ""
+        )
+    }
+    .map { NoteItemUiState(it != null, it) }
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NoteItemUiState())
 
     init {
         resetCalendar()
@@ -112,18 +125,18 @@ class HomeViewModel(
     }
 
     fun fetchNote(currentDate: LocalDate) {
-        viewModelScope.launch {
-            noteRepository.getNoteByDate(
-                currentDate.format(
-                    DateUtil.normalizeDateFormat()
-                )
-            ).collect {
-                noteState = NoteItemUiState(
-                    available = it != null,
-                    note = it
-                )
-            }
-        }
+//        viewModelScope.launch {
+//            noteRepository.getNoteByDate(
+//                currentDate.format(
+//                    DateUtil.normalizeDateFormat()
+//                )
+//            ).collect {
+//                noteState = NoteItemUiState(
+//                    available = it != null,
+//                    note = it
+//                )
+//            }
+//        }
     }
 
     fun fetchPurtim(currentDate: LocalDate) {

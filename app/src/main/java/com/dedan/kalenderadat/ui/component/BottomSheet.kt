@@ -64,7 +64,7 @@ fun BottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp)
+                .padding(16.dp)
                 .pointerInput(Unit) {
                     detectDragGestures(
                         onDragEnd = {

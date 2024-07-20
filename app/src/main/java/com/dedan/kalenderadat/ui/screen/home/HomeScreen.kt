@@ -47,6 +47,7 @@ fun HomeScreen(
     )
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val noteState by viewModel.noteState.collectAsStateWithLifecycle()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -72,9 +73,9 @@ fun HomeScreen(
                 val bottomSheetHeight by remember(uiState.bottomSheetExpand) {
                     derivedStateOf {
                         if (uiState.bottomSheetExpand)
-                            (maxHeight.value * 0.80f).dp
+                            (maxHeight.value * 0.85f).dp
                         else
-                            (maxHeight.value * 0.35f).dp
+                            (maxHeight.value * 0.38f).dp
                     }
                 }
 
@@ -121,7 +122,7 @@ fun HomeScreen(
                             uiState.bottomSheetExpand -> ShowFullDateDetail(
                                 selectedDate = uiState.selectedDate!!,
                                 navigateToNoteEditor = navigateToNoteEditor,
-                                noteState = viewModel.noteState,
+                                noteState = noteState,
                                 eventDetailUiState = viewModel.eventDetailUiState
                             )
                         }
