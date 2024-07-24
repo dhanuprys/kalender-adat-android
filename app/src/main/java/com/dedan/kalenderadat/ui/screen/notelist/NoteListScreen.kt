@@ -19,7 +19,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +33,9 @@ import com.dedan.kalenderadat.ui.navigation.NavigationDestination
 import com.dedan.kalenderadat.ui.theme.KalenderBaliTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dedan.kalenderadat.AppViewModelProvider
+import com.dedan.kalenderadat.util.DateUtil
+import com.dedan.kalenderadat.util.translateDayIndexToBalineseDay
+import java.time.format.DateTimeFormatterBuilder
 
 object NoteListDestination : NavigationDestination {
     override val route = "note_list"
@@ -120,12 +125,19 @@ fun NoteCard(
     note: NoteItem,
     modifier: Modifier = Modifier
 ) {
+    val dateString by remember(note) {
+        derivedStateOf {
+            DateUtil.parseNormalizedDate(note.date).format(
+                DateTimeFormatterBuilder().appendPattern("dd MMMM yyyy").toFormatter()
+            )
+        }
+    }
     Card(modifier = modifier) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(note.content)
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                note.date,
+                dateString,
                 textAlign = TextAlign.End,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.fillMaxWidth()
