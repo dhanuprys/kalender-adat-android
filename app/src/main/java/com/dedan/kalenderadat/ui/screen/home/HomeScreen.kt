@@ -41,6 +41,7 @@ object HomeDestination : NavigationDestination {
 @Composable
 fun HomeScreen(
     navigateToNoteEditor: (date: String) -> Unit,
+    navigateToNoteList: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(
         factory = AppViewModelProvider.Factory
@@ -60,7 +61,9 @@ fun HomeScreen(
     ) {
         Scaffold(
             topBar = {
-                CalendarAppBar()
+                CalendarAppBar(
+                    navigateToNoteList = navigateToNoteList
+                )
             },
             modifier = Modifier.fillMaxSize()
         ) { paddingValues ->

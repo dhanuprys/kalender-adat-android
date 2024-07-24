@@ -12,6 +12,8 @@ import com.dedan.kalenderadat.ui.screen.home.HomeDestination
 import com.dedan.kalenderadat.ui.screen.home.HomeScreen
 import com.dedan.kalenderadat.ui.screen.note.NoteEditorDestination
 import com.dedan.kalenderadat.ui.screen.note.NoteEditorScreen
+import com.dedan.kalenderadat.ui.screen.notelist.NoteListDestination
+import com.dedan.kalenderadat.ui.screen.notelist.NoteListScreen
 
 @Composable
 fun CalendarNavHost(
@@ -27,6 +29,9 @@ fun CalendarNavHost(
             HomeScreen(
                 navigateToNoteEditor = {
                     navController.navigate("note/$it")
+                },
+                navigateToNoteList = {
+                    navController.navigate(NoteListDestination.route)
                 }
             )
         }
@@ -39,6 +44,15 @@ fun CalendarNavHost(
         ) {
             NoteEditorScreen(
                 navigateBack = { navController.popBackStack() },
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+
+        composable(
+            route = NoteListDestination.route,
+            exitTransition = { ExitTransition.None }
+        ) {
+            NoteListScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }

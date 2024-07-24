@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dedan.kalenderadat.ui.screen.home.HomeViewModel
 import com.dedan.kalenderadat.ui.screen.note.NoteEditorViewModel
+import com.dedan.kalenderadat.ui.screen.notelist.NoteListViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -20,6 +21,12 @@ object AppViewModelProvider {
         initializer {
             NoteEditorViewModel(
                 this.createSavedStateHandle(),
+                calendarApplication().container.noteRepository
+            )
+        }
+
+        initializer {
+            NoteListViewModel(
                 calendarApplication().container.noteRepository
             )
         }
