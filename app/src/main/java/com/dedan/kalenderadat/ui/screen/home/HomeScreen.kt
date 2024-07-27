@@ -24,7 +24,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dedan.kalenderadat.AppViewModelProvider
 import com.dedan.kalenderadat.CalendarAppBar
-import com.dedan.kalenderadat.CalendarDrawer
 import com.dedan.kalenderadat.R
 import com.dedan.kalenderadat.ui.component.BottomSheet
 import com.dedan.kalenderadat.ui.component.CalendarHeader
@@ -41,6 +40,7 @@ object HomeDestination : NavigationDestination {
 
 @Composable
 fun HomeScreen(
+    onDrawerOpenRequest: () -> Unit,
     navigateToNoteEditor: (date: String) -> Unit,
     navigateToNoteList: () -> Unit,
     modifier: Modifier = Modifier,
@@ -57,87 +57,80 @@ fun HomeScreen(
         viewModel.setBottomSheetExpand(false);
     }
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            CalendarDrawer()
+    Scaffold(
+        topBar = {
+            CalendarAppBar(
+                onDrawerOpenRequest = onDrawerOpenRequest,
+                navigateToNoteList = navigateToNoteList
+            )
         },
-        modifier = modifier
-    ) {
-        Scaffold(
-            topBar = {
-                CalendarAppBar(
-                    navigateToNoteList = navigateToNoteList
+        modifier = Modifier.fillMaxSize()
+    ) { paddingValues ->
+        BoxWithConstraints(modifier = modifier.padding(paddingValues)) {
+            val calendarHeight by remember {
+                derivedStateOf {
+                    (maxHeight.value * 0.6f).dp
+                }
+            }
+            val bottomSheetHeight by remember(uiState.bottomSheetExpand) {
+                derivedStateOf {
+                    if (uiState.bottomSheetExpand)
+                        (maxHeight.value * 0.85f).dp
+                    else
+                        (maxHeight.value * 0.38f).dp
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(calendarHeight)
+            ) {
+                CalendarHeader(
+                    currentDate = uiState.currentDate,
+                    onDateChange = { viewModel.setCurrentDate(it) },
+                    modifier = Modifier.fillMaxWidth()
                 )
-            },
-            modifier = Modifier.fillMaxSize()
-        ) { paddingValues ->
-            BoxWithConstraints(modifier = modifier.padding(paddingValues)) {
-                val calendarHeight by remember {
-                    derivedStateOf {
-                        (maxHeight.value * 0.6f).dp
-                    }
-                }
-                val bottomSheetHeight by remember(uiState.bottomSheetExpand) {
-                    derivedStateOf {
-                        if (uiState.bottomSheetExpand)
-                            (maxHeight.value * 0.85f).dp
-                        else
-                            (maxHeight.value * 0.38f).dp
-                    }
-                }
+                CalendarLayout(
+                    currentDate = uiState.currentDate,
+                    dates = uiState.dates,
+                    selectedDate = uiState.selectedDate,
+                    purtimUiState = viewModel.purtimUiState,
+                    holidayUiState = viewModel.holidayUiState,
+                    dateEventUiState = viewModel.dateEventUiState,
+                    onDateSelected = { viewModel.setOpenDetailDate(it) },
+                    onRefreshClick = { viewModel.fetchDates(uiState.currentDate, true) }
+                )
+            }
 
-                Column(
+            Column(
+                verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                BottomSheet(
+                    collapsable = uiState.bottomSheetExpand,
+                    onCollapseRequest = { viewModel.setBottomSheetExpand(false) },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(calendarHeight)
-                ) {
-                    CalendarHeader(
-                        currentDate = uiState.currentDate,
-                        onDateChange = { viewModel.setCurrentDate(it) },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    CalendarLayout(
-                        currentDate = uiState.currentDate,
-                        dates = uiState.dates,
-                        selectedDate = uiState.selectedDate,
-                        purtimUiState = viewModel.purtimUiState,
-                        holidayUiState = viewModel.holidayUiState,
-                        dateEventUiState = viewModel.dateEventUiState,
-                        onDateSelected = { viewModel.setOpenDetailDate(it) },
-                        onRefreshClick = { viewModel.fetchDates(uiState.currentDate, true) }
-                    )
-                }
-
-                Column(
-                    verticalArrangement = Arrangement.Bottom,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    BottomSheet(
-                        collapsable = uiState.bottomSheetExpand,
-                        onCollapseRequest = { viewModel.setBottomSheetExpand(false) },
-                        modifier = Modifier
 //                            .animateContentSize()
-                            .height(bottomSheetHeight)
-                    ) {
-                        when {
-                            uiState.selectedDate == null -> ClickOnDateGuide()
-                            !uiState.bottomSheetExpand -> ShowEventBrief(
-                                selectedDate = uiState.selectedDate!!,
-                                eventDetailUiState = viewModel.eventDetailUiState,
-                                onExpandClick = { viewModel.setBottomSheetExpand(true) }
-                            )
-                            uiState.bottomSheetExpand -> ShowFullDateDetail(
-                                selectedDate = uiState.selectedDate!!,
-                                navigateToNoteEditor = navigateToNoteEditor,
-                                noteState = noteState,
-                                eventDetailUiState = viewModel.eventDetailUiState
-                            )
-                        }
+                        .height(bottomSheetHeight)
+                ) {
+                    when {
+                        uiState.selectedDate == null -> ClickOnDateGuide()
+                        !uiState.bottomSheetExpand -> ShowEventBrief(
+                            selectedDate = uiState.selectedDate!!,
+                            eventDetailUiState = viewModel.eventDetailUiState,
+                            onExpandClick = { viewModel.setBottomSheetExpand(true) }
+                        )
+
+                        uiState.bottomSheetExpand -> ShowFullDateDetail(
+                            selectedDate = uiState.selectedDate!!,
+                            navigateToNoteEditor = navigateToNoteEditor,
+                            noteState = noteState,
+                            eventDetailUiState = viewModel.eventDetailUiState
+                        )
                     }
                 }
             }
         }
-
     }
 }

@@ -17,6 +17,7 @@ import com.dedan.kalenderadat.ui.screen.notelist.NoteListScreen
 
 @Composable
 fun CalendarNavHost(
+    onDrawerOpenRequest: () -> Unit,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -27,6 +28,7 @@ fun CalendarNavHost(
     ) {
         composable(route = HomeDestination.route) {
             HomeScreen(
+                onDrawerOpenRequest = onDrawerOpenRequest,
                 navigateToNoteEditor = {
                     navController.navigate("note/$it")
                 },
