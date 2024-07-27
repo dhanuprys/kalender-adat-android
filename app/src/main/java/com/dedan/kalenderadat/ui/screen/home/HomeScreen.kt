@@ -1,5 +1,6 @@
 package com.dedan.kalenderadat.ui.screen.home
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -51,6 +52,10 @@ fun HomeScreen(
     val noteState by viewModel.noteState.collectAsStateWithLifecycle()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    BackHandler(uiState.bottomSheetExpand) {
+        viewModel.setBottomSheetExpand(false);
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,

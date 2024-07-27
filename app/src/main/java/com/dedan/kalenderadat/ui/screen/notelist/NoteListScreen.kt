@@ -3,6 +3,7 @@ package com.dedan.kalenderadat.ui.screen.notelist
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,6 +34,7 @@ import com.dedan.kalenderadat.ui.navigation.NavigationDestination
 import com.dedan.kalenderadat.ui.theme.KalenderBaliTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dedan.kalenderadat.AppViewModelProvider
+import com.dedan.kalenderadat.ui.component.DataEmpty
 import com.dedan.kalenderadat.util.DateUtil
 import com.dedan.kalenderadat.util.translateDayIndexToBalineseDay
 import java.time.format.DateTimeFormatterBuilder
@@ -76,12 +78,19 @@ fun NoteListScreen(
         },
         modifier = modifier
     ) { innerPadding ->
-        NoteListBody(
-            noteListUiState = noteListUiState,
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(16.dp)
-        )
+        if (noteListUiState.notes.isEmpty()) {
+            DataEmpty(
+                modifier = Modifier.padding(innerPadding)
+                    .fillMaxSize()
+            )
+        } else {
+            NoteListBody(
+                noteListUiState = noteListUiState,
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(16.dp)
+            )
+        }
     }
 }
 
@@ -132,6 +141,7 @@ fun NoteCard(
             )
         }
     }
+
     Card(modifier = modifier) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(note.content)
