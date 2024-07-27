@@ -27,10 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.dedan.kalenderadat.R
 import com.dedan.kalenderadat.data.EventDetailUiState
 import com.dedan.kalenderadat.data.NoteItemUiState
 import com.dedan.kalenderadat.model.EventDetail
@@ -66,7 +68,8 @@ fun ShowFullDateDetail(
                             navigateToNoteEditor = navigateToNoteEditor,
                             noteState = noteState,
                             date = selectedDate,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
                                 .padding(vertical = 16.dp)
                         )
                     } else {
@@ -74,17 +77,18 @@ fun ShowFullDateDetail(
                             verticalArrangement = Arrangement.spacedBy(16.dp),
                             modifier = Modifier.weight(1f)
                         ) {
-                            items(eventDetailUiState.data.size) {
-                                if (it == 0) {
-                                    NoteCard(
-                                        navigateToNoteEditor = navigateToNoteEditor,
-                                        noteState = noteState,
-                                        date = selectedDate,
-                                        modifier = Modifier.fillMaxWidth()
-                                            .padding(vertical = 16.dp)
-                                    )
-                                }
+                            item {
+                                NoteCard(
+                                    navigateToNoteEditor = navigateToNoteEditor,
+                                    noteState = noteState,
+                                    date = selectedDate,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 16.dp)
+                                )
+                            }
 
+                            items(eventDetailUiState.data.size) {
                                 val item = eventDetailUiState.data[it]
 
                                 EventCardItem(
@@ -221,6 +225,9 @@ fun EventCardItem(
             if (event.imageUrl != null) {
                 AsyncImage(
                     model = "https://adat.suryamahendra.com/storage/" + event.imageUrl,
+                    fallback = painterResource(id = R.drawable.placeholder),
+                    error = painterResource(id = R.drawable.placeholder),
+                    placeholder = painterResource(id = R.drawable.placeholder),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
