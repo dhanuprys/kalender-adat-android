@@ -56,9 +56,6 @@ fun ShowFullDateDetail(
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .fillMaxSize()
     ) {
-        EventDetailHeader(date = selectedDate)
-        Spacer(modifier = Modifier.height(16.dp))
-
         Column {
             when (eventDetailUiState) {
                 is EventDetailUiState.Loading ->
@@ -112,7 +109,6 @@ fun ShowFullDateDetail(
 
 @Composable
 fun ShowEventBrief(
-    selectedDate: LocalDate,
     eventDetailUiState: EventDetailUiState,
     onExpandClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -122,9 +118,6 @@ fun ShowEventBrief(
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .fillMaxSize()
     ) {
-        EventDetailHeader(date = selectedDate)
-        Spacer(modifier = Modifier.height(16.dp))
-
         Box(modifier = Modifier.weight(1f)) {
             when (eventDetailUiState) {
                 is EventDetailUiState.Loading -> {

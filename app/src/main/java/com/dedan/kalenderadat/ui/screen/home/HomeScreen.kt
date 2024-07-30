@@ -2,7 +2,10 @@ package com.dedan.kalenderadat.ui.screen.home
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -29,6 +33,7 @@ import com.dedan.kalenderadat.ui.component.BottomSheet
 import com.dedan.kalenderadat.ui.component.CalendarHeader
 import com.dedan.kalenderadat.ui.component.CalendarLayout
 import com.dedan.kalenderadat.ui.component.ClickOnDateGuide
+import com.dedan.kalenderadat.ui.component.EventDetailHeader
 import com.dedan.kalenderadat.ui.component.ShowEventBrief
 import com.dedan.kalenderadat.ui.component.ShowFullDateDetail
 import com.dedan.kalenderadat.ui.navigation.NavigationDestination
@@ -103,6 +108,16 @@ fun HomeScreen(
                 )
             }
 
+            if (uiState.bottomSheetExpand) {
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                        .background(
+                            color = Color.Black.copy(alpha = 0.5f)
+                        )
+                        .clickable { viewModel.setBottomSheetExpand(false) }
+                )
+            }
+
             Column(
                 verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier.fillMaxSize()
@@ -110,6 +125,11 @@ fun HomeScreen(
                 BottomSheet(
                     collapsable = uiState.bottomSheetExpand,
                     onCollapseRequest = { viewModel.setBottomSheetExpand(false) },
+                    title = {
+                        uiState.selectedDate?.let {
+                            EventDetailHeader(date = uiState.selectedDate!!)
+                        }
+                    },
                     modifier = Modifier
 //                            .animateContentSize()
                         .height(bottomSheetHeight)
@@ -117,7 +137,6 @@ fun HomeScreen(
                     when {
                         uiState.selectedDate == null -> ClickOnDateGuide()
                         !uiState.bottomSheetExpand -> ShowEventBrief(
-                            selectedDate = uiState.selectedDate!!,
                             eventDetailUiState = viewModel.eventDetailUiState,
                             onExpandClick = { viewModel.setBottomSheetExpand(true) }
                         )

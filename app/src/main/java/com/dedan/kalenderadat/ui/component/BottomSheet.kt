@@ -7,6 +7,7 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -35,6 +36,7 @@ fun BottomSheet(
     contentPadding: PaddingValues = PaddingValues(16.dp),
     collapsable: Boolean = true,
     onCollapseRequest: () -> Unit = {},
+    title: @Composable () -> Unit = {},
     content: @Composable () -> Unit = {}
 ) {
     var offset by remember { mutableStateOf(0f) }
@@ -84,6 +86,8 @@ fun BottomSheet(
                 .width(100.dp)
                 .height(5.dp)
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            title()
         }
         content()
     }
