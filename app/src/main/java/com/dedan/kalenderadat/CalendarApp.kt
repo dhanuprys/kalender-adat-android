@@ -34,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dedan.kalenderadat.model.navigationItemList
 import com.dedan.kalenderadat.ui.navigation.CalendarNavHost
 import com.dedan.kalenderadat.ui.screen.home.HomeDestination
+import com.dedan.kalenderadat.ui.screen.info.InfoDestination
 import com.dedan.kalenderadat.ui.screen.notelist.NoteListDestination
 import kotlinx.coroutines.launch
 
@@ -145,7 +146,7 @@ fun CalendarAppDrawer(
                 Text("Info Aplikasi")
             },
             selected = false,
-            onClick = { redirectTo(HomeDestination.route, true) },
+            onClick = { redirectTo(InfoDestination.route, true) },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
         )
     }

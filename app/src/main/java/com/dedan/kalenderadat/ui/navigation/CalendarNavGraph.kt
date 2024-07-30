@@ -10,6 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.dedan.kalenderadat.ui.screen.home.HomeDestination
 import com.dedan.kalenderadat.ui.screen.home.HomeScreen
+import com.dedan.kalenderadat.ui.screen.info.InfoDestination
+import com.dedan.kalenderadat.ui.screen.info.InfoScreen
 import com.dedan.kalenderadat.ui.screen.note.NoteEditorDestination
 import com.dedan.kalenderadat.ui.screen.note.NoteEditorScreen
 import com.dedan.kalenderadat.ui.screen.notelist.NoteListDestination
@@ -55,6 +57,15 @@ fun CalendarNavHost(
             exitTransition = { ExitTransition.None }
         ) {
             NoteListScreen(
+                navigateUp = { navController.navigateUp() }
+            )
+        }
+
+        composable(
+            route = InfoDestination.route,
+            exitTransition = { ExitTransition.None }
+        ) {
+            InfoScreen(
                 navigateUp = { navController.navigateUp() }
             )
         }
