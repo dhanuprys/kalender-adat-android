@@ -25,7 +25,7 @@ fun CategoryName(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(modifier = Modifier
-            .size(13.dp)
+            .size(11.dp)
             .background(color = color, shape = CircleShape))
         Spacer(modifier = Modifier.width(8.dp))
         Text(

@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -134,7 +135,17 @@ fun ShowEventBrief(
 
                 is EventDetailUiState.Success -> {
                     if (eventDetailUiState.data.isEmpty()) {
-                        Text("No Event")
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Text(
+                                text = "Tidak ada acara pada tanggal ini",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     } else {
                         Column {
                             LazyColumn {
@@ -245,17 +256,18 @@ fun EventCardItem(
                 text = event.description ?: "Deskripsi tidak tersedia",
                 style = MaterialTheme.typography.bodyMedium
             )
+            Spacer(modifier = Modifier.height(8.dp))
             CategoryName(
                 color = translateColorString(event.categoryColor),
                 text = event.categoryName
             )
-            Text(
-                text = "Terakhir diubah pada xxxx",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.End,
-                modifier = Modifier.fillMaxWidth()
-            )
+//            Text(
+//                text = "Terakhir diubah pada xxxx",
+//                style = MaterialTheme.typography.bodySmall,
+//                color = MaterialTheme.colorScheme.onSurfaceVariant,
+//                textAlign = TextAlign.End,
+//                modifier = Modifier.fillMaxWidth()
+//            )
         }
     }
 }
