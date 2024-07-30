@@ -104,7 +104,11 @@ fun HomeScreen(
                     holidayUiState = viewModel.holidayUiState,
                     dateEventUiState = viewModel.dateEventUiState,
                     onDateSelected = { viewModel.setOpenDetailDate(it) },
-                    onRefreshClick = { viewModel.fetchDates(uiState.currentDate, true) }
+                    onRefreshClick = {
+                        viewModel.fetchDates(uiState.currentDate, true)
+                        viewModel.fetchPurtim(uiState.currentDate, true)
+                        viewModel.fetchHolidays(uiState.currentDate, true)
+                    }
                 )
             }
 

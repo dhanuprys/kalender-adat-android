@@ -143,10 +143,11 @@ class HomeViewModel(
 //        }
     }
 
-    fun fetchPurtim(currentDate: LocalDate) {
+    fun fetchPurtim(currentDate: LocalDate, refresh: Boolean = false) {
         viewModelScope.launch {
-            Log.d("ViewModel Purtim", "Start request purtim")
-            purtimUiState = PurtimUiState.Loading
+            if (!refresh) {
+                purtimUiState = PurtimUiState.Loading
+            }
             purtimUiState = try {
                 val dates = calendarRepository.getPurtim(
                     month = currentDate.monthValue,
@@ -161,9 +162,12 @@ class HomeViewModel(
         }
     }
 
-    fun fetchHolidays(currentDate: LocalDate) {
+    fun fetchHolidays(currentDate: LocalDate, refresh: Boolean = false) {
         viewModelScope.launch {
-            holidayUiState = HolidayUiState.Loading
+            if (!refresh) {
+                holidayUiState = HolidayUiState.Loading
+            }
+
             holidayUiState = try {
                 val holidays = calendarRepository.getHolidays(
                     month = currentDate.monthValue,

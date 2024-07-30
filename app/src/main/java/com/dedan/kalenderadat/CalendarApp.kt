@@ -97,7 +97,7 @@ fun CalendarAppBar(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Kalender Bali")
+                Text(text = "Kalender Adat")
                 IconButton(onClick = navigateToNoteList) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_note),
