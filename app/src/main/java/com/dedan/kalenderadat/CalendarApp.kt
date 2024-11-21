@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
@@ -100,7 +102,12 @@ fun CalendarAppBar(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Kalender Adat")
+//                Text(text = "Kalender Adat")
+                Image(
+                    painter = painterResource(id = R.drawable.header),
+                    contentDescription = null,
+                    modifier = Modifier.padding(vertical = 10.dp)
+                )
                 IconButton(onClick = navigateToNoteList) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_note),
@@ -122,7 +129,8 @@ fun CalendarAppDrawer(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 32.dp, bottom = 32.dp)
         ) {
             Image(painter = painterResource(id = R.drawable.logo_desa), contentDescription = null)
